@@ -1,1 +1,1 @@
-web: gunicorn wsgi:whattrash
+web: gunicorn --bind 0.0.0.0:$PORT whattrash:app
