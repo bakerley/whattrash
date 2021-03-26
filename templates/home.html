@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+  <br>
+	<div class="row row-flex">
+    <div class="col-md-6 classy_frame" style="padding-top: 0%;">
+      <center><h3 style="text-transform: capitalize;">Find out what is your waste</h3></center>
+      <img id="preview" src="{{ url_for('static', filename = 'images/waste.jpeg') }}" height="400px" width="100%" title = "client pic">
+
+      <center>
+        <br>
+        <div class="image-upload">
+          <p id="upload-web" style="font-weight: bold;font-size: 32px">Upload an image:</p>
+          <label for="file">
+              <input type="file" name="file" id="file" onchange="previewImage()">
+          </label>
+          <button id="but2" type="button" class="btn btn-info btn-lg" onclick="classifyWaste()">Classify your waste</button>
+        </div>
+
+        <br>
+
+      </center>
+      <br>
+    </div>
+
+    <div class="col-md-6 classy_frame" style="padding-top: 0%;" id="about">
+      <center><h3 style="text-transform: capitalize;">About the project</h3></center>
+      <img id="preview" src="{{ url_for('static', filename = 'images/schema.png') }}" height="400px" width="100%" title = "client pic">
+      <h4>This project uses a VGG-16 classification model in order to recognize the waste. It ouput the type of the waste and the trash in which you should throw it.
+      </h4>
+    </div>
+  </div>
+</div>
+
+<script>
+  var imgData;
+  var loading = document.getElementById("loading");
+
+  function previewImage(){
+
+    var file = document.getElementById("file").files;
+    if(file.length>0){
+      var fileName = file[0].name;
+      var allowed_extensions = new Array("jpeg", "jpg","png");
+      var file_extension = fileName.split('.').pop().toLowerCase();
+
+      if(allowed_extensions[0] == file_extension || allowed_extensions[1] == file_extension || allowed_extensions[2] == file_extension){
+        var imgObj = document.getElementById("preview");
+        var fileReader = new FileReader();
+
+        fileReader.onload = function(event){
+          document.getElementById("preview").setAttribute("src", event.target.result);
+          imgData = event.target.result;
+        };
+
+        fileReader.readAsDataURL(file[0]);
+      }
+      else{
+        document.getElementById("file").value = "";
+        document.getElementById("errorTitle").innerHTML = "Error - Only Image File Acceptable";
+        document.getElementById("errorMessage").innerHTML = "We only accept image with .jpeg .jpg or .png extensions.";
+        $("#errorPopup").modal("show");
+
+      }
+
+
+    }
+  }
+
+  function classifyWaste(){
+    var file = document.getElementById("file").files;
+    if(file.length > 0){
+      loading.style.display = "block";
+
+      var form_data = new FormData();
+      form_data.append("file", document.getElementById("file").files[0]);
+      $.ajax({
+        url: 'classifywaste', // point to server-side URL
+        dataType: 'json', // what to expect back from server
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function (data) {
+
+          var predicted_value = data["predicted_value"];
+          var details = data["details"];
+          var more = data["more"];
+          var where = data["where"];
+
+          var about = document.getElementById("about");
+
+          about.innerHTML = "<center><h2>Your object is categorized as <b>" + predicted_value + "</b> waste</h2></center><p>"+ details +"</p><br><p>I can recycle my trash in <b>"+ where +"</b></p><a class=\"btn btn-info btn-lg\" href="+ more +" role=\"button\" target=\"_blank\">I want to know more</a>";
+
+          loading.style.display = "none";
+        }
+
+      });
+    }
+    else{
+      document.getElementById("errorTitle").innerHTML = "Error - There is no image";
+      document.getElementById("errorMessage").innerHTML = "Please upload image of your waste.";
+      $("#errorPopup").modal("show");
+    }
+  }
+</script>
+
+
+{% endblock %}

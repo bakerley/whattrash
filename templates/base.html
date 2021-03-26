@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Whatwaste</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <style>
+
+    p {
+      font-size: 24px;
+    }
+
+    a {
+      cursor: alias;
+      font-size: 120%;
+    }
+
+    h4{
+      padding-top: 4%;
+      padding-left: 4px;
+      padding-right: 4px;
+      padding-bottom: 4px;
+    }
+
+    h3{
+      padding-top: 2%;
+      padding-bottom: 1%;
+      padding-left: 4px;
+    }
+
+    .classy_frame{
+      position: relative;
+      display: block;
+      border: solid;
+      border-color: black;
+      border-radius: 3px;
+      overflow: hidden;
+      box-shadow: none;
+      transform: scale(0.98) translateY(5px);
+      padding-top: 2%;
+      margin-bottom: 3%;
+
+    }
+
+    #loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        z-index: 9999999;
+        display: none;
+    }
+
+    .footer {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      background-color: black;
+      color: white;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    #but1 , #but2 {
+      display:inline-block;
+      /* additional code */
+    }
+
+    .row-flex {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  </style>
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.png') }}" type="image/x-icon">
+    {{ JSGlue.include() }} <!-- this is use for use url_for() from javascript -->
+  </head>
+  <body>
+
+    <nav class="navbar navbar-light bg-light">
+        <img src="{{ url_for('static', filename='images/benoit-logo.png') }}" width="60" height="60" class="d-inline-block align-top" alt="">
+      <center>
+      <h1>What is this waste ?</h1>
+      </center>
+    </nav>
+
+    <!-- Modal -->
+    <div class="modal fade" id="errorPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content classy_frame">
+          <div class="modal-header">
+            <p class="modal-title" id="errorTitle" style="font-size:large;">Modal title</p>
+          </div>
+          <div class="modal-body">
+            <p style="font-size:medium;" id="errorMessage"></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="color: #0b2438;">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="loading">
+      <h3 style="text-align: center;">Our model is finding what is your waste...</h3>
+    </div>
+
+    {% block content %}
+    {% endblock %}
+
+  <div class="footer">
+    <p>Made by Ben</p>
+  </div>
+  </body>
+</html>
